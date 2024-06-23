@@ -3,9 +3,11 @@ import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import { useState } from 'react';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
 
-const DashBoard = () => {
-  const [region, setRegion] = useState('');
+const Search = () => {
+  
 
 
   return (
@@ -33,8 +35,10 @@ const DashBoard = () => {
             )
            }}/>
       </Box>
+
+
     </>
   );
 }
 
-export default DashBoard;
+export default Search;

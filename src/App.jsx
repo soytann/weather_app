@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/createClient";
-import DashBoard from "./pages/DashBoard";
+import DashBoard from "./components/Search";
+import Layout from "./components/layout/Layout";
 
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
 
@@ -48,26 +49,31 @@ function App() {
       },
       body: JSON.stringify({ latitude, longitude }),
     })
-
-      .then(response => {
-        return response.json();
-  })
-    .then(data => console.log(data.Feature[0].Property.Address))
-    .catch(error => console.error('Error:', error));
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.Feature[0].Property.Address);
+        setCurrentRegion(data.Feature[0].Property.Address);
+      })
+      .catch(error => console.error('Error:', error));
   }
+//Search
+  const [region, setRegion] = useState('');
+  
   return (
     <>
-      <DashBoard />
-      <ul>
-        {current_weather.map((weather) => (
-          <li key={weather.id}>
-            {weather.region} - {weather.temperature}°C
-          </li>
-        ))}
-      </ul>
-      <p>Latitude: {currentLatitude}</p>
-      <p>Longitude: {currentLongitude}</p>
-      <p>Region: {currentRegion}</p>
+      <Layout>
+        {/* <ul>
+          {current_weather.map((weather) => (
+            <li key={weather.id}>
+              {weather.region} - {weather.temperature}°C - 
+              <img src={weather.icon} alt="weather icon" onError={(e) => e.target.style.display='none'} />
+            </li>
+          ))}
+        </ul>
+        <p>Latitude: {currentLatitude}</p>
+        <p>Longitude: {currentLongitude}</p>
+        <p>Region: {currentRegion}</p> */}
+      </Layout>
     </>
   );
 }
