@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "../utils/createClient";
 import DashBoard from "./components/Search";
 import Layout from "./components/layout/Layout";
+import { Box,Grid,Paper } from "@mui/material";
+import Search from "./components/Search";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
 
@@ -10,6 +14,7 @@ function App() {
   const [currentLatitude, setCurrentLatitude] = useState();
   const [currentLongitude, setCurrentLongitude] = useState();
   const [currentRegion, setCurrentRegion] = useState();
+  const [region, setRegion] = useState(''); //Searchから
 
   useEffect(() => {
     getWeather();
@@ -57,23 +62,30 @@ function App() {
       .catch(error => console.error('Error:', error));
   }
 //Search
-  const [region, setRegion] = useState('');
+
   
   return (
     <>
-      <Layout>
-        {/* <ul>
-          {current_weather.map((weather) => (
-            <li key={weather.id}>
-              {weather.region} - {weather.temperature}°C - 
-              <img src={weather.icon} alt="weather icon" onError={(e) => e.target.style.display='none'} />
-            </li>
-          ))}
-        </ul>
-        <p>Latitude: {currentLatitude}</p>
-        <p>Longitude: {currentLongitude}</p>
-        <p>Region: {currentRegion}</p> */}
-      </Layout>
+      
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout ><DashBoard
+            region={ region } setRegion={setRegion} /></Layout>} />
+
+              {/* <ul>
+                {current_weather.map((weather) => (
+                  <li key={weather.id}>
+                    {weather.region} - {weather.temperature}°C -
+                    <img src={weather.icon} alt="weather icon" onError={(e) => e.target.style.display='none'} />
+                  </li>
+                ))}
+              </ul>
+              <p>Latitude: {currentLatitude}</p>
+              <p>Longitude: {currentLongitude}</p>
+              <p>Region: {currentRegion}</p> */}
+
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
