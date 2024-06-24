@@ -6,7 +6,11 @@ import { useState } from 'react';
 import Paper from '@mui/material/Paper';
 import { Box } from "@mui/material";
 
-const Search = ({region, setRegion,}) => {
+const Search = ({ region, setRegion, fetchWeather }) => {
+  const handleSearch = (e) => {
+    e.preventDefault();
+    fetchWeather(region)
+  }
   
 
 
@@ -26,14 +30,15 @@ const Search = ({region, setRegion,}) => {
           label="都市名"
           variant="standard"
           value={region}
-          onChange={(e)=> setRegion(e.target.value)}
+          onChange={(e) => setRegion(e.target.value)}
+          onSubmit={handleSearch}
           InputProps={{ 
             endAdornment: (
               <InputAdornment position='end' >
                 <SearchIcon/>
               </InputAdornment>
             )
-           }}/>
+           }}/>          {console.log(region)}
       </Box>
 
 
