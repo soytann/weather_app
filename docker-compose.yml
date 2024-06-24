@@ -1,0 +1,21 @@
+version: '3.1'
+
+services:
+  n8n:
+    image: n8nio/n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=Nishida
+      - N8N_BASIC_AUTH_PASSWORD=Kvv5RXm7fhySPFh
+      - N8N_CORS_ALLOW_ORIGIN=http://localhost:5173
+      - N8N_ENDPOINT_WEBHOOK=/webhook/
+      - N8N_ENDPOINT_WEBHOOK_TEST=/webhook-test/
+      - N8N_DEFAULT_CORS_ALLOW_ORIGIN=*
+      - N8N_DEFAULT_CORS_ALLOW_METHODS=GET,POST,PUT,DELETE,OPTIONS
+    volumes:
+      - n8n-data:/root/.n8n
+
+volumes:
+  n8n-data:

@@ -5,7 +5,7 @@ import Layout from "./components/layout/Layout";
 import { Box, Grid, Paper, Container } from "@mui/material";
 import Search from "./components/Search";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { createTheme, ThemeProvider,CssBaseline } from '@mui/material';
+import { createTheme, ThemeProvider, CssBaseline } from '@mui/material';
 
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
 
@@ -92,13 +92,21 @@ function App() {
   }
   async function fetchWeather(region) {
     try {
-      const response = await fetch('http://localhost:5678/form/93ff03d5-d36c-49ea-aedf-9530948e6e01', {
+      console.log("fetchWeather called:", region);
+      const response = await fetch('http://localhost:5678/form/d95bebee-79c1-47c6-b6d4-9ce2edbbde34', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Basic ' + btoa('Nishida:Kvv5RXm7fhySPFh'),
         },
         body: JSON.stringify({ region }),
       });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const data = await response.json();
+      console.log(data);
 
     } catch (error) {
       console.error('Error fetching weather data:', error);
