@@ -93,7 +93,7 @@ function App() {
   async function fetchWeather(region) {
     try {
       console.log("fetchWeather called:", region);
-      const response = await fetch('http://localhost:5678/form/d95bebee-79c1-47c6-b6d4-9ce2edbbde34', {
+      const response = await fetch('http://localhost:5678/webhook/fetchweather', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -109,7 +109,7 @@ function App() {
       console.log(data);
 
     } catch (error) {
-      console.error('Error fetching weather data:', error);
+      console.error(error);
     }
   }
 
