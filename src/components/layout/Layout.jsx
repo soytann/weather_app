@@ -2,16 +2,16 @@ import { Grid, Paper, Box, Container, CssBaseline } from "@mui/material";
 import Search from "../Search";
 import Main from "../Main";
 
-const Layout = ({ region, setRegion, fetchWeather, current_weather }) => {
+const Layout = ({ region, setRegion, fetchWeather, currentWeather, searchedLocationWeather }) => {
   return (
     <>
       <CssBaseline />
       <Container sx={{ background: 'linear-gradient(to right, #a95c0a, #bf430b)', minHeight: '100vh', padding: 2 }}>
-        <Search region={region} setRegion={setRegion} fetchWeather={fetchWeather} />
+        <Search region={region} setRegion={setRegion} fetchWeather={fetchWeather}  />
         <Box bgcolor="transparent" p={2} flexGrow={1} color="white">
           Main Content
           <Box height="25vh" mb={4} textAlign='center'>
-            <Main current_weather={current_weather} />
+            <Main currentWeather={currentWeather} searchedLocationWeather={searchedLocationWeather}/>
           </Box>
 
           <Grid container spacing={4} textAlign='center'>

@@ -1,24 +1,37 @@
+import { useEffect } from "react";
 import { Box } from "@mui/material";
-const Main = ({current_weather}) => {
+const Main = ({currentWeather,searchedLocationWeather}) => {
+  useEffect(() => {
+    console.log("currentWeather in Main:", currentWeather);
+    console.log("searchedLocationWeather in Main:", searchedLocationWeather);
+  }, [currentWeather, searchedLocationWeather]);
 
    // データが存在するかどうかをチェック
-   if (!current_weather || current_weather.length === 0) {
+   if (!currentWeather || currentWeather.length === 0) {
+    return <p>No weather data available</p>;
+  }
+   if (!searchedLocationWeather || searchedLocationWeather.length === 0) {
     return <p>No weather data available</p>;
   }
 
   // データが存在する場合のみアクセス
-  const weatherData = current_weather[0];
+  console.log(searchedLocationWeather)
+
+  const weatherData = currentWeather[0];
+  const lastItem = (searchedLocationWeather.length )- 1
+  const searchedWeatherData = searchedLocationWeather[lastItem];
+  console.log(searchedWeatherData)
+  console.log(searchedLocationWeather.length)
 
   return (
     <>
-      
-      <p>{console.log(current_weather)}</p>
-      <h1>{weatherData.region}</h1>
-      <h2>{weatherData.main}</h2>
+      <p>{console.log(weatherData)}</p>
+      <h1>{searchedWeatherData.region}</h1>
+      <h2>{searchedWeatherData.main}</h2>
       <h1>
-        <img src={`https://openweathermap.org/img/w/${weatherData.icon}.png`} alt="Weather Icon" />
+        <img src={`https://openweathermap.org/img/w/${searchedWeatherData.icon}.png`} alt="Weather Icon" />
       </h1>
-      <h3>{weatherData.weather_description }</h3>
+      <h3>{searchedWeatherData.weather_description }</h3>
       <Box>
         
       </Box>

@@ -11,7 +11,7 @@ const Search = ({ region, setRegion, fetchWeather }) => {
   }
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      e.preventDefault(); 
+      e.preventDefault();
       handleSearch(e);
     }
   }
@@ -37,13 +37,13 @@ const Search = ({ region, setRegion, fetchWeather }) => {
           value={region}
           onChange={(e) => setRegion(e.target.value)}
           onKeyDown={handleKeyDown}
-          InputProps={{ 
+          InputProps={{
             endAdornment: (
               <InputAdornment position='end' >
-                <SearchIcon/>
+                <SearchIcon />
               </InputAdornment>
             )
-           }}/>          {console.log(region)}
+          }} />
       </Box>
 
 
