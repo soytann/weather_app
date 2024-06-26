@@ -1,13 +1,21 @@
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
-import Box from '@mui/material/Box';
-import { useState } from 'react';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
+import { Box } from "@mui/material";
 
-const Search = () => {
-  
+const Search = ({ region, setRegion, fetchWeather }) => {
+  const handleSearch = (e) => {
+    e.preventDefault();
+    console.log("サブミットされた:", region);
+    fetchWeather(region)
+  }
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSearch(e);
+    }
+  }
+
 
 
   return (
@@ -20,20 +28,22 @@ const Search = () => {
         }}
         noValidate
         autoComplete="off"
+        onSubmit={handleSearch}
       >
         <TextField
           id="standard-basic"
-          label="都市名"
+          label="region"
           variant="standard"
           value={region}
-          onChange={(e)=> setRegion(e.target.value)}
-          InputProps={{ 
+          onChange={(e) => setRegion(e.target.value)}
+          onKeyDown={handleKeyDown}
+          InputProps={{
             endAdornment: (
               <InputAdornment position='end' >
-                <SearchIcon/>
+                <SearchIcon />
               </InputAdornment>
             )
-           }}/>
+          }} />
       </Box>
 
 
