@@ -74,7 +74,7 @@ function App() {
 
   // 現在地から取得された天気情報をDBから取得
   async function getCurrentWeather() {
-    const { data, error } = await supabase.from("current_weather").select();
+    const { data, error } = await supabase.from("current_weather").select().order("id", { ascending: false });
     if (error) {
       console.error("Error fetching current weather:", error);
       return;
@@ -86,7 +86,7 @@ function App() {
   // 検索して取得された天気情報をDBから取得
   async function getSearchedWeather() {
     console.log("getSearchedWeather 呼び出し")
-    const { data, error } = await supabase.from("searched_location_weather").select();
+    const { data, error } = await supabase.from("searched_location_weather").select().order("id", { ascending: false });
     if (error) {
       console.error("Error fetching SEARCHED weather:", error);
       return;

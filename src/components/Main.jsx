@@ -28,16 +28,15 @@ const Main = ({ currentWeather, searchedLocationWeather }) => {
   // ReactAnimatedWeatherのデフォルト設定
   const defaults = {
     color: 'goldenrod',
-    size: 64,
+    size: 80,
     animate: true
   };
-
-
+  
   useEffect(() => {
     console.log("currentWeather in Main:", currentWeather);
     console.log("searchedLocationWeather in Main:", searchedLocationWeather);
   }, [currentWeather, searchedLocationWeather]);
-
+  
   // データが存在するかどうかをチェック
   if (!currentWeather || currentWeather.length === 0) {
     return <p>No weather data available</p>;
@@ -45,30 +44,26 @@ const Main = ({ currentWeather, searchedLocationWeather }) => {
   if (!searchedLocationWeather || searchedLocationWeather.length === 0) {
     return <p>No weather data available</p>;
   }
-
+  
   // データが存在する場合のみアクセス
   console.log(searchedLocationWeather)
-
+  
   const weatherData = currentWeather[0];
-  const lastItem = (searchedLocationWeather.length) - 1
-  const searchedWeatherData = searchedLocationWeather[lastItem];
+  const searchedWeatherData = searchedLocationWeather[0];
   console.log(searchedWeatherData)
   console.log(searchedLocationWeather.length)
-
+  
+  const animatedIcon = iconMapping[searchedWeatherData.icon] || 'CLEAR_DAY';
   return (
     <>
       <p>{console.log(weatherData)}</p>
       <h1>{searchedWeatherData.region}</h1>
-      <h2>{searchedWeatherData.icon}</h2><br />
       <ReactAnimatedWeather
-        icon={iconMapping}
+        icon={animatedIcon}
         color={defaults.color}
         size={defaults.size}
         animate={defaults.animate}
       /><br />
-      <h1>
-        <img src={`https://openweathermap.org/img/w/${searchedWeatherData.icon}.png`} alt="Weather Icon" />
-      </h1>
       <h3>{searchedWeatherData.weather_description}</h3>
       <Box>
 
