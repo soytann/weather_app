@@ -4,10 +4,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Box } from "@mui/material";
 
 const Search = ({ region, setRegion, fetchWeather }) => {
-  const handleSearch = (e) => {
-    e.preventDefault();
+  const handleSearch = () => {
     console.log("サブミットされた:", region);
-    fetchWeather(region)
+    fetchWeather(region);
+    setRegion('');
+  
   }
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
