@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../utils/createClient";
 import Main from "./components/Main";
 import Layout from "./components/layout/Layout";
@@ -42,20 +42,46 @@ function App() {
     },
   });
 
+  // Supabaseのリアルタイムリスナーを設定
+  useEffect(() => {
+    try {
+      supabase
+        .channel('searchedWeather') // 監視するテーブルを指定
+        .on("postgres_changes", //固定
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "searched_location_weather",
+          },
+          (payload) => {
+            console.log('New data:', payload.new);
+            setSearchedLocationWeather(prev => [payload.new, ...prev]);
+          }
+        )
+        .subscribe();
+
+      // コンポーネントのクリーンアップ時にリスナーを解除
+      return () => {
+        supabase.channel("searchedWeather").unsubscribe()
+      };
+    } catch (error) { console.error("リアルタイムエラー") }
+  }, [])
+
   useEffect(() => {
     getCurrentWeather();
-    getSearchedWeather();
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
     } else {
       console.error("No Geolocation");
     }
-  }, []);
 
-  // `searchedLocationWeather` ステートが更新されたときにログを出力
-  useEffect(() => {
-    console.log("searchedLocationWeather updated:", searchedLocationWeather);
-  }, [searchedLocationWeather]);
+  }, []);
+  // // `searchedLocationWeather` ステートが更新されたときにログを出力
+  // useEffect(() => {
+  //   console.log("searchedLocationWeather updated:", searchedLocationWeather);
+  // }, [searchedLocationWeather]);
+
 
 
   // 現在地取得するための緯度経度取得
@@ -76,22 +102,13 @@ function App() {
     const { data, error } = await supabase.from("current_weather").select().order("id", { ascending: false });
     if (error) {
       console.error("Error fetching current weather:", error);
-      return;
+      return; 
     }
     setCurrentWeather(data);
     console.log("Current weather data:", data);
   }
 
-  // 検索して取得された天気情報をDBから取得
-  async function getSearchedWeather() {
-    const { data, error } = await supabase.from("searched_location_weather").select().order("id", { ascending: false });
-    if (error) {
-      console.error("Error fetching SEARCHED weather:", error);
-      return;
-    }
-    setSearchedLocationWeather(data);
-    console.log("Searched weather data:", data);
-  };
+
 
   // 現在地住所取得(Supabase Edge FunctionでCORS設定)
   async function fetchRegion(latitude, longitude) {
@@ -107,7 +124,7 @@ function App() {
       .then(response => response.json())
       .then(data => {
         console.log(data.Feature[0].Property.AddressElement[0]
-      )
+        )
         if (data && data.Feature && data.Feature[0] && data.Feature[0].Property && data.Feature[0].Property.Address) {
           setCurrentRegion(data.Feature[0].Property.Address);
           fetchCurrentLocationWeather(data.Feature[0].Property.Address);
@@ -157,10 +174,10 @@ function App() {
   }
 
   // 検索された住所をもとにn8nで天気取得
-  async function fetchWeather(region) {
+  const fetchWeather = useCallback(async () => {
     try {
       console.log("fetchWeather called:", region);
-      const response = await fetch('http://localhost:5678//webhook//fetchweather', {
+      await fetch('http://localhost:5678//webhook//fetchweather', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -168,14 +185,13 @@ function App() {
         },
         body: JSON.stringify({ region }),
       });
-      const data = await response.json();
-      console.log("Fetched weather data:", data);
-      getSearchedWeather();
-
     } catch (error) {
       console.error("Error fetching weather:", error);
     }
-  }
+  }, [region])
+
+
+
   // 検索された住所をもとにn8nで天気取得
   async function fetchFivedaysWeather(region) {
     try {
@@ -188,15 +204,12 @@ function App() {
         },
         body: JSON.stringify({ region }),
       });
-      const data = await response.json();
-      console.log("Fetched weather data:", data);
-      getSearchedWeather();
 
     } catch (error) {
       console.error("Error fetching weather:", error);
     }
   }
-  
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
