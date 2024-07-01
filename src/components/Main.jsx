@@ -32,10 +32,6 @@ const Main = ({ currentWeather, searchedLocationWeather }) => {
     animate: true
   };
   
-  useEffect(() => {
-    console.log("currentWeather in Main:", currentWeather);
-    console.log("searchedLocationWeather in Main:", searchedLocationWeather);
-  }, [currentWeather, searchedLocationWeather]);
   
   // データが存在するかどうかをチェック
   if (!currentWeather || currentWeather.length === 0) {
@@ -46,7 +42,6 @@ const Main = ({ currentWeather, searchedLocationWeather }) => {
   }
   
   // データが存在する場合のみアクセス
-  console.log(searchedLocationWeather)
   
   const weatherData = currentWeather[0];
   const searchedWeatherData = searchedLocationWeather[0];
