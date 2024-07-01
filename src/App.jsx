@@ -64,7 +64,6 @@ function App() {
     const longitude = position.coords.longitude;
     setCurrentLatitude(latitude);
     setCurrentLongitude(longitude);
-    console.log(latitude, longitude);
     fetchRegion(latitude, longitude);
   }
 
@@ -85,7 +84,6 @@ function App() {
 
   // 検索して取得された天気情報をDBから取得
   async function getSearchedWeather() {
-    console.log("getSearchedWeather 呼び出し")
     const { data, error } = await supabase.from("searched_location_weather").select().order("id", { ascending: false });
     if (error) {
       console.error("Error fetching SEARCHED weather:", error);
