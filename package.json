@@ -16,6 +16,7 @@
     "@mui/material": "^5.15.20",
     "@supabase/supabase-js": "^2.43.5",
     "install": "^0.13.0",
+    "luxon": "^3.4.4",
     "mui": "^0.0.1",
     "npm": "^10.8.1",
     "react": "^18.2.0",

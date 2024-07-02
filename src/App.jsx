@@ -10,11 +10,14 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
 
 function App() {
   const [currentWeather, setCurrentWeather] = useState([]);
+  const [currentForecast, setCurrentForecast] = useState([]);
   const [searchedLocationWeather, setSearchedLocationWeather] = useState([]);
-  const [currentLatitude, setCurrentLatitude] = useState();
-  const [currentLongitude, setCurrentLongitude] = useState();
+  const [searchedLocationForecast, setSearchedLocationForecast] = useState([]);
+  // const [currentLatitude, setCurrentLatitude] = useState();
+  // const [currentLongitude, setCurrentLongitude] = useState();
   const [currentRegion, setCurrentRegion] = useState();
   const [region, setRegion] = useState(''); // Searchから
+  const [mode, setMode] = useState('current'); // 表示モード
 
   const theme = createTheme({
     palette: {
@@ -42,38 +45,20 @@ function App() {
     },
   });
 
-  // Supabaseのリアルタイムリスナーを設定
   useEffect(() => {
+    // getCurrentWeather();
+
     try {
-      supabase
-        .channel('searchedWeather') // 監視するテーブルを指定
-        .on("postgres_changes", //固定
-          {
-            event: "INSERT",
-            schema: "public",
-            table: "searched_location_weather",
-          },
-          (payload) => {
-            console.log('New data:', payload.new);
-            setSearchedLocationWeather(prev => [payload.new, ...prev]);
-          }
-        )
-        .subscribe();
+      fetch("https://ipapi.co/latlong").then(result => result.text()).then((result => {
+        const [latitude, longitude] = result.split(',')
+        // setCurrentLatitude(latitude);
+        // setCurrentLongitude(longitude);
+        fetchRegion(latitude, longitude);
+      }))
 
-      // コンポーネントのクリーンアップ時にリスナーを解除
-      return () => {
-        supabase.channel("searchedWeather").unsubscribe()
-      };
-    } catch (error) { console.error("リアルタイムエラー") }
-  }, [])
-
-  useEffect(() => {
-    getCurrentWeather();
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-    } else {
+    } catch (e) {
       console.error("No Geolocation");
+
     }
 
   }, []);
@@ -84,29 +69,15 @@ function App() {
 
 
 
-  // 現在地取得するための緯度経度取得
-  async function successCallback(position) {
-    const latitude = position.coords.latitude;
-    const longitude = position.coords.longitude;
-    setCurrentLatitude(latitude);
-    setCurrentLongitude(longitude);
-    fetchRegion(latitude, longitude);
-  }
-
-  function errorCallback(error) {
-    console.error(error);
-  }
-
   // 現在地から取得された天気情報をDBから取得
-  async function getCurrentWeather() {
-    const { data, error } = await supabase.from("current_weather").select().order("id", { ascending: false });
-    if (error) {
-      console.error("Error fetching current weather:", error);
-      return; 
-    }
-    setCurrentWeather(data);
-    console.log("Current weather data:", data);
-  }
+  // async function getCurrentWeather() {
+  //   const { data, error } = await supabase.from("current_weather").select().order("id", { ascending: false });
+  //   if (error) {
+  //     console.error("Error fetching current weather:", error);
+  //     return;
+  //   }
+  //   // console.log("Current weather data:", data);
+  // }
 
 
 
@@ -123,11 +94,13 @@ function App() {
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data.Feature[0].Property.AddressElement[0]
-        )
-        if (data && data.Feature && data.Feature[0] && data.Feature[0].Property && data.Feature[0].Property.Address) {
-          setCurrentRegion(data.Feature[0].Property.Address);
-          fetchCurrentLocationWeather(data.Feature[0].Property.Address);
+        const cityName = data.Feature[0].Property.AddressElement.find(element => element.Level === "city")?.Name ??
+          data.Feature[0].Property.AddressElement[0].Name
+        // console.log('address element city', cityName)
+        if (cityName) {
+          setCurrentRegion(cityName);
+          fetchCurrentLocationWeather(cityName);
+          fetchCurrentFivedaysWeather(cityName);
         } else {
           console.error(" from fetchRegion.");
         }
@@ -138,7 +111,7 @@ function App() {
   // 現在地をもとにn8nで天気情報取得、DBに追加
   async function fetchCurrentLocationWeather(currentRegion) {
     try {
-      console.log("fetchCurrentLocationWeather called:", currentRegion);
+      // console.log("fetchCurrentLocationWeather called:", currentRegion);
       const response = await fetch('http://localhost:5678//webhook//fetch-currentlocation-weather', {
         method: 'POST',
         headers: {
@@ -148,15 +121,16 @@ function App() {
         body: JSON.stringify({ currentRegion }),
       });
       const data = await response.json();
-      console.log("Fetched current location weather data:", data);
-      getCurrentWeather();
+      // console.log("Fetched current location weather data:", data);
+
+      setCurrentWeather(data);
+
     } catch (error) {
       console.error("Error fetching current location weather:", error);
     }
   }
   async function fetchCurrentFivedaysWeather(currentRegion) {
     try {
-      console.log("fetchCurrentLocationWeather called:", currentRegion);
       const response = await fetch('http://localhost:5678//webhook//fetch-currentlocation-weather-fivedays', {
         method: 'POST',
         headers: {
@@ -166,8 +140,9 @@ function App() {
         body: JSON.stringify({ currentRegion }),
       });
       const data = await response.json();
-      console.log("Fetched current location weather data:", data);
-      getCurrentWeather();
+      console.log("Fetched current fivedays location weather data:", currentRegion, data);
+
+      setCurrentWeather(data);
     } catch (error) {
       console.error("Error fetching current location weather:", error);
     }
@@ -176,8 +151,7 @@ function App() {
   // 検索された住所をもとにn8nで天気取得
   const fetchWeather = useCallback(async () => {
     try {
-      console.log("fetchWeather called:", region);
-      await fetch('http://localhost:5678//webhook//fetchweather', {
+      const data = await fetch('http://localhost:5678//webhook//fetchweather', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -185,6 +159,13 @@ function App() {
         },
         body: JSON.stringify({ region }),
       });
+
+      const result = await data.json();
+
+      console.log("set searched location fetchWeather", region, result)
+      setSearchedLocationWeather(prev => [...result, ...prev])
+
+      setMode('search')
     } catch (error) {
       console.error("Error fetching weather:", error);
     }
@@ -195,7 +176,6 @@ function App() {
   // 検索された住所をもとにn8nで天気取得
   async function fetchFivedaysWeather(region) {
     try {
-      console.log("fetch5daysWeather called:", region);
       const response = await fetch('http://localhost:5678//webhook//fetchweatherfivedays', {
         method: 'POST',
         headers: {
@@ -205,9 +185,19 @@ function App() {
         body: JSON.stringify({ region }),
       });
 
+      const result = await response.json();
+
+      console.log("fetch fivedays weather", region, result)
+      setSearchedLocationForecast(prev => [...result, ...prev])
+
     } catch (error) {
       console.error("Error fetching weather:", error);
     }
+  }
+
+  function searchForCity(region) {
+    fetchWeather(region)
+    fetchFivedaysWeather(region)
   }
 
   return (
@@ -216,7 +206,16 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={
-            <Layout region={region} setRegion={setRegion} fetchWeather={fetchWeather} currentWeather={currentWeather} searchedLocationWeather={searchedLocationWeather} >
+            <Layout
+              region={region}
+              setRegion={setRegion}
+              fetchWeather={searchForCity}
+              currentWeather={currentWeather}
+              currentForecast={currentForecast}
+              searchedLocationWeather={searchedLocationWeather}
+              searchedLocationForecast={searchedLocationForecast}
+              mode={mode}
+            >
               <Main />
             </Layout>} />
         </Routes>

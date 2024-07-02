@@ -6,6 +6,7 @@ import { Box } from "@mui/material";
 const Search = ({ region, setRegion, fetchWeather }) => {
   const handleSearch = () => {
     console.log("サブミットされた:", region);
+    
     fetchWeather(region);
     setRegion('');
   

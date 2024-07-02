@@ -8,12 +8,19 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import WbTwilightIcon from '@mui/icons-material/WbTwilight';
-import Stack from '@mui/system/Stack';
+import {iconMapping, iconDefaults} from '../constants'
 
-
-const Main = ({ currentWeather, searchedLocationWeather }) => {
+const Main = ({ currentWeather, searchedLocationWeather, search, mode }) => {
   const [sunriseTime, setSunriseTime] = useState('');
   const [sunsetTime, setSunsetTime] = useState('');
+
+  useEffect(() => {
+    const sunriseTimestamp = 1719775732;
+    const sunsetTimestamp = 1719828060;
+
+    setSunriseTime(convertUnixTimestampToTime(sunriseTimestamp));
+    setSunsetTime(convertUnixTimestampToTime(sunsetTimestamp));
+  }, []);
 
   useEffect(() => {
     const sunriseTimestamp = 1719775732;
@@ -30,77 +37,47 @@ const Main = ({ currentWeather, searchedLocationWeather }) => {
     const seconds = date.getSeconds().toString().padStart(2, '0');
     return `${hours}:${minutes}:${seconds}`;
   }
-  
 
-  const iconMapping = {
-    '01d': 'CLEAR_DAY',
-    '01n': 'CLEAR_NIGHT',
-    '02d': 'PARTLY_CLOUDY_DAY',
-    '02n': 'PARTLY_CLOUDY_NIGHT',
-    '03d': 'CLOUDY',
-    '03n': 'CLOUDY',
-    '04d': 'CLOUDY',
-    '04n': 'CLOUDY',
-    '09d': 'RAIN',
-    '09n': 'RAIN',
-    '10d': 'RAIN',
-    '10n': 'RAIN',
-    '11d': 'RAIN',
-    '11n': 'RAIN',
-    '13d': 'SNOW',
-    '13n': 'SNOW',
-    '50d': 'FOG',
-    '50n': 'FOG',
-  };
-
-  // ReactAnimatedWeatherのデフォルト設定
-  const defaults = {
-    color: 'goldenrod',
-    size: 80,
-    animate: true
-  };
-  
-  
   // データが存在するかどうかをチェック
-  if (!currentWeather || currentWeather.length === 0) {
+  if (mode === 'current' && (!currentWeather || currentWeather.length === 0)) {
+    return <p>No current weather data available</p>;
+  }
+  if (mode === 'search' && (!searchedLocationWeather || searchedLocationWeather.length === 0)) {
     return <p>No weather data available</p>;
   }
-  if (!searchedLocationWeather || searchedLocationWeather.length === 0) {
-    return <p>No weather data available</p>;
-  }
-  
+
   // データが存在する場合のみアクセス
-  
-  const weatherData = currentWeather[0];
-  const searchedWeatherData = searchedLocationWeather[0];
-  console.log(searchedWeatherData)
 
-  
-  const animatedIcon = iconMapping[searchedWeatherData.icon] || 'CLEAR_DAY';
+  const weatherData = mode === "search" ? searchedLocationWeather[0] : currentWeather[0];
 
-  
+  const animatedIcon = iconMapping[weatherData.icon] ?? 'CLEAR_DAY';
+
+  // useEffect(() => console.log(weatherData), [weatherData])
+
   return (
+
+
     <>
-      <p>{console.log(weatherData)}</p>
-      <h1>{searchedWeatherData.region}</h1>
+      <h1>{weatherData.region}</h1>
       <ReactAnimatedWeather
         icon={animatedIcon}
-        color={defaults.color}
-        size={defaults.size}
-        animate={defaults.animate}
+        color={iconDefaults.color}
+        size={iconDefaults.size}
+        animate={iconDefaults.animate}
       /><br />
-      <h3>{searchedWeatherData.weather_description}</h3>
+      <h3>{weatherData.weather_description}</h3>
 
-      
 
-      <Box sx={{ display: 'flex',
-          justifyContent: 'center',
-          p: 1,
-          m: 1 }}>
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        p: 1,
+        m: 1
+      }}>
 
 
         <Box>
-          <List sx={{ width: '50%', maxWidth: 360,  }}>
+          <List sx={{ width: '50%', maxWidth: 360, }}>
             <ListItem>
               <ListItemAvatar>
                 <Avatar>
@@ -112,7 +89,7 @@ const Main = ({ currentWeather, searchedLocationWeather }) => {
           </List>
         </Box>
         <Box>
-          <List sx={{ width: '50%', maxWidth: 360,  }}>
+          <List sx={{ width: '50%', maxWidth: 360, }}>
             <ListItem>
               <ListItemAvatar>
                 <Avatar>
@@ -125,6 +102,7 @@ const Main = ({ currentWeather, searchedLocationWeather }) => {
         </Box>
       </Box>
     </>
+
   );
 }
 
