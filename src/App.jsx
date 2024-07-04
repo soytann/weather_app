@@ -142,7 +142,7 @@ function App() {
       const data = await response.json();
       console.log("Fetched current fivedays location weather data:", currentRegion, data);
 
-      setCurrentWeather(data);
+      setCurrentForecast(data);
     } catch (error) {
       console.error("Error fetching current location weather:", error);
     }
@@ -189,7 +189,7 @@ function App() {
 
       console.log("fetch fivedays weather", region, result)
       setSearchedLocationForecast(prev => [...result, ...prev])
-
+      setMode('search')
     } catch (error) {
       console.error("Error fetching weather:", error);
     }
