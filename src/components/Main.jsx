@@ -8,27 +8,28 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import WbTwilightIcon from '@mui/icons-material/WbTwilight';
-import {iconMapping, iconDefaults} from '../constants'
+import { iconMapping, iconDefaults } from '../constants';
+import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';
 
-const Main = ({ currentWeather, searchedLocationWeather, search, mode }) => {
+const Main = ({ currentWeather, searchedLocationWeather, mode }) => {
   const [sunriseTime, setSunriseTime] = useState('');
   const [sunsetTime, setSunsetTime] = useState('');
 
-  useEffect(() => {
-    const sunriseTimestamp = 1719775732;
-    const sunsetTimestamp = 1719828060;
-
-    setSunriseTime(convertUnixTimestampToTime(sunriseTimestamp));
-    setSunsetTime(convertUnixTimestampToTime(sunsetTimestamp));
-  }, []);
+  const weatherData = mode === "search" ? searchedLocationWeather[0] : currentWeather[0];
+  console.log(weatherData);
 
   useEffect(() => {
-    const sunriseTimestamp = 1719775732;
-    const sunsetTimestamp = 1719828060;
+    if (weatherData && weatherData.sunrise && weatherData.sunset) {
+      const sunriseTimestamp = weatherData.sunrise;
+      const sunsetTimestamp = weatherData.sunset;
 
-    setSunriseTime(convertUnixTimestampToTime(sunriseTimestamp));
-    setSunsetTime(convertUnixTimestampToTime(sunsetTimestamp));
-  }, []);
+      setSunriseTime(convertUnixTimestampToTime(sunriseTimestamp));
+      setSunsetTime(convertUnixTimestampToTime(sunsetTimestamp));
+    } else {
+      console.error("No sunset or sunrise data");
+    }
+  }, [weatherData]);
+
 
   function convertUnixTimestampToTime(unixTimestamp) {
     const date = new Date(unixTimestamp * 1000); // ミリ秒に変換
@@ -46,17 +47,9 @@ const Main = ({ currentWeather, searchedLocationWeather, search, mode }) => {
     return <p>No weather data available</p>;
   }
 
-  // データが存在する場合のみアクセス
-
-  const weatherData = mode === "search" ? searchedLocationWeather[0] : currentWeather[0];
-
   const animatedIcon = iconMapping[weatherData.icon] ?? 'CLEAR_DAY';
 
-  // useEffect(() => console.log(weatherData), [weatherData])
-
   return (
-
-
     <>
       <h1>{weatherData.region}</h1>
       <ReactAnimatedWeather
@@ -64,9 +57,9 @@ const Main = ({ currentWeather, searchedLocationWeather, search, mode }) => {
         color={iconDefaults.color}
         size={iconDefaults.size}
         animate={iconDefaults.animate}
-      /><br />
+      />
+      <h2>{Math.round(weatherData.temperature)}℃</h2>
       <h3>{weatherData.weather_description}</h3>
-
 
       <Box sx={{
         display: 'flex',
@@ -74,14 +67,12 @@ const Main = ({ currentWeather, searchedLocationWeather, search, mode }) => {
         p: 1,
         m: 1
       }}>
-
-
         <Box>
-          <List sx={{ width: '50%', maxWidth: 360, }}>
+          <List sx={{ width: '50%', maxWidth: 360 }}>
             <ListItem>
               <ListItemAvatar>
                 <Avatar>
-                  <WbSunnyIcon />
+                  <WbSunnyRoundedIcon />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText primary="Sunrise" secondary={sunriseTime} />
@@ -89,7 +80,7 @@ const Main = ({ currentWeather, searchedLocationWeather, search, mode }) => {
           </List>
         </Box>
         <Box>
-          <List sx={{ width: '50%', maxWidth: 360, }}>
+          <List sx={{ width: '50%', maxWidth: 360 }}>
             <ListItem>
               <ListItemAvatar>
                 <Avatar>
@@ -102,7 +93,6 @@ const Main = ({ currentWeather, searchedLocationWeather, search, mode }) => {
         </Box>
       </Box>
     </>
-
   );
 }
 
