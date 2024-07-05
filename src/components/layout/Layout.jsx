@@ -6,7 +6,7 @@ import { iconMapping, iconDefaults } from '../../constants';
 import ReactAnimatedWeather from 'react-animated-weather';
 import { DateTime } from 'luxon';
 import { supabase } from "../../../utils/createClient";
-import {  grey,pink} from "@mui/material/colors";
+import { grey,pink} from "@mui/material/colors";
 
 const Layout = ({ region, setRegion, fetchWeather, currentWeather, currentForecast, searchedLocationWeather, searchedLocationForecast, mode,setMode, setSearchedLocationWeather, setSearchedLocationForecast}) => {
 
