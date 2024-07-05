@@ -13,8 +13,6 @@ function App() {
   const [currentForecast, setCurrentForecast] = useState([]);
   const [searchedLocationWeather, setSearchedLocationWeather] = useState([]);
   const [searchedLocationForecast, setSearchedLocationForecast] = useState([]);
-  // const [currentLatitude, setCurrentLatitude] = useState();
-  // const [currentLongitude, setCurrentLongitude] = useState();
   const [currentRegion, setCurrentRegion] = useState();
   const [region, setRegion] = useState(''); // Searchから
   const [mode, setMode] = useState('current'); // 表示モード
@@ -51,8 +49,6 @@ function App() {
     try {
       fetch("https://ipapi.co/latlong").then(result => result.text()).then((result => {
         const [latitude, longitude] = result.split(',')
-        // setCurrentLatitude(latitude);
-        // setCurrentLongitude(longitude);
         fetchRegion(latitude, longitude);
       }))
 
@@ -62,22 +58,6 @@ function App() {
     }
 
   }, []);
-  // // `searchedLocationWeather` ステートが更新されたときにログを出力
-  // useEffect(() => {
-  //   console.log("searchedLocationWeather updated:", searchedLocationWeather);
-  // }, [searchedLocationWeather]);
-
-
-
-  // 現在地から取得された天気情報をDBから取得
-  // async function getCurrentWeather() {
-  //   const { data, error } = await supabase.from("current_weather").select().order("id", { ascending: false });
-  //   if (error) {
-  //     console.error("Error fetching current weather:", error);
-  //     return;
-  //   }
-  //   // console.log("Current weather data:", data);
-  // }
 
 
 
@@ -129,6 +109,7 @@ function App() {
       console.error("Error fetching current location weather:", error);
     }
   }
+    // 現在地をもとにn8nで天気情報取得、DBに追加-Forecast
   async function fetchCurrentFivedaysWeather(currentRegion) {
     try {
       const response = await fetch('http://localhost:5678//webhook//fetch-currentlocation-weather-fivedays', {
@@ -140,7 +121,7 @@ function App() {
         body: JSON.stringify({ currentRegion }),
       });
       const data = await response.json();
-      console.log("Fetched current fivedays location weather data:", currentRegion, data);
+      // console.log("Fetched current fivedays location weather data:", currentRegion, data);
 
       setCurrentForecast(data);
     } catch (error) {
@@ -162,7 +143,7 @@ function App() {
 
       const result = await data.json();
 
-      console.log("set searched location fetchWeather", region, result)
+      // console.log("set searched location fetchWeather", region, result)
       setSearchedLocationWeather(prev => [...result, ...prev])
 
       setMode('search')
@@ -173,7 +154,7 @@ function App() {
 
 
 
-  // 検索された住所をもとにn8nで天気取得
+  // 検索された住所をもとにn8nで天気取得-Forecast
   async function fetchFivedaysWeather(region) {
     try {
       const response = await fetch('http://localhost:5678//webhook//fetchweatherfivedays', {
@@ -187,7 +168,7 @@ function App() {
 
       const result = await response.json();
 
-      console.log("fetch fivedays weather", region, result)
+      // console.log("fetch fivedays weather", region, result)
       setSearchedLocationForecast(prev => [...result, ...prev])
       setMode('search')
     } catch (error) {
@@ -215,6 +196,9 @@ function App() {
               searchedLocationWeather={searchedLocationWeather}
               searchedLocationForecast={searchedLocationForecast}
               mode={mode}
+              setMode={setMode}
+              setSearchedLocationWeather={setSearchedLocationWeather}
+              setSearchedLocationForecast={setSearchedLocationForecast}
             >
               <Main />
             </Layout>} />

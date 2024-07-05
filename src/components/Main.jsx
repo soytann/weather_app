@@ -6,7 +6,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
-import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import WbTwilightIcon from '@mui/icons-material/WbTwilight';
 import { iconMapping, iconDefaults } from '../constants';
 import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';
@@ -16,7 +15,6 @@ const Main = ({ currentWeather, searchedLocationWeather, mode }) => {
   const [sunsetTime, setSunsetTime] = useState('');
 
   const weatherData = mode === "search" ? searchedLocationWeather[0] : currentWeather[0];
-  console.log(weatherData);
 
   useEffect(() => {
     if (weatherData && weatherData.sunrise && weatherData.sunset) {
@@ -51,7 +49,7 @@ const Main = ({ currentWeather, searchedLocationWeather, mode }) => {
 
   return (
     <>
-      <h1>{weatherData.region}</h1>
+      <h1>{weatherData.region},&nbsp;{weatherData.country}</h1>
       <ReactAnimatedWeather
         icon={animatedIcon}
         color={iconDefaults.color}

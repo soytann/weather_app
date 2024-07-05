@@ -5,11 +5,13 @@ import { useState, useEffect } from "react";
 import { iconMapping, iconDefaults } from '../../constants';
 import ReactAnimatedWeather from 'react-animated-weather';
 import { DateTime } from 'luxon';
+import { supabase } from "../../../utils/createClient";
 
-const Layout = ({ region, setRegion, fetchWeather, currentWeather, currentForecast, searchedLocationWeather, searchedLocationForecast, mode }) => {
+const Layout = ({ region, setRegion, fetchWeather, currentWeather, currentForecast, searchedLocationWeather, searchedLocationForecast, mode,setMode, setSearchedLocationWeather, setSearchedLocationForecast}) => {
 
-  const [bgImage, setBgImage] = useState("black")
-  
+  const [bgImage, setBgImage] = useState("black");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [locationID, setLocationID] = useState("");
 
   useEffect(() => {
     if (currentWeather && currentWeather.length) {
@@ -24,32 +26,83 @@ const Layout = ({ region, setRegion, fetchWeather, currentWeather, currentForeca
           setBgImage("#0000ff");
       }
     }
+  }, [currentWeather]);
 
-    console.log(forecastData.map(forecast =>
-      [forecast.forecast_time, DateTime.fromISO(forecast.forecast_time).hour, DateTime.fromISO(forecast.forecast_time).month, DateTime.fromISO(forecast.forecast_time).day]
-    ))
-  }, [currentWeather, searchedLocationForecast])
+  const handleCityClick = (city, cityID) => {
+    setSelectedCity(city);
+    setLocationID(cityID);
+  };
 
+  useEffect(() => {
+    // console.log('Selected City in useEffect:', selectedCity);
+    if (selectedCity && locationID) {
+      getPresetWeather(selectedCity);
+      getPresetForecast(locationID);
+    }
+  }, [selectedCity, locationID]);
 
+  const getPresetWeather = async (selectedCity) => {
+    try {
+      const { data, error } = await supabase.from("preset_location").select().eq("region", selectedCity);
+      if (error) {
+        throw error;
+      }
+      // console.log('Data received from Supabase:', data);
+      setSearchedLocationWeather(data);
+      setMode('search');
+    } catch (error) {
+      console.error("Error fetching preset weather:", error);
+    }
+  };
+
+  const getPresetForecast = async (locationID) => {
+    try {
+      const { data, error } = await supabase.from("preset_location_forecast").select().eq("location_id", locationID);
+      if (error) {
+        throw error;
+      }
+      // console.log('Data received from Supabase:', data);
+      setSearchedLocationForecast(data);
+      setMode('search');
+    } catch (error) {
+      console.error("Error fetching preset weather:", error);
+    }
+  };
 
   const forecastData = mode === "search" ? searchedLocationForecast : currentForecast;
 
   let previousDay = null;
 
-
   return (
     <>
-      <CssBaseline />
+      {/* <CssBaseline /> */}
       <Container sx={{ background: bgImage, minHeight: '100vh', padding: 2 }}>
-        <Box sx={{ display:'flex',justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Search region={region} setRegion={setRegion} fetchWeather={fetchWeather} />
-          <Box sx={{  display: 'flex', justifyContent: 'space-between', gap: 2 }}>
-            <h4>Tokyo</h4> <h4>Fukuoka</h4> <h4>Omuta</h4>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+
+            <Box sx={{ cursor: 'pointer' }} >
+              <h4  onClick={() => handleCityClick('Tokyo', '1850144')}>Tokyo</h4>
+            </Box>
+            <Box sx={{ cursor: 'pointer' }} >
+              <h4 onClick={() => handleCityClick('New York', '5128581')}>New York</h4>
+            </Box>
+            <Box sx={{ cursor: 'pointer' }} >
+              <h4 onClick={() => handleCityClick('London', '2643743')}>London</h4>
+            </Box >
+            <Box sx={{ cursor: 'pointer' }}>
+              <h4 onClick={() => handleCityClick('Paris', '2988507')}>Paris</h4>
+            </Box>
           </Box>
         </Box>
+
         <Box p={2} color="white">
           <Box height="25vh" mb={24} textAlign='center'>
-            <Main currentWeather={currentWeather} searchedLocationWeather={searchedLocationWeather} mode={mode} />
+            <Main 
+              currentWeather={currentWeather} 
+              searchedLocationWeather={searchedLocationWeather} 
+              mode={mode} 
+            />
           </Box>
 
           <Box sx={{ display: 'flex', flexWrap: 'none', overflowX: 'scroll' }}>
@@ -84,7 +137,6 @@ const Layout = ({ region, setRegion, fetchWeather, currentWeather, currentForeca
               })
             }
           </Box>
-
         </Box>
       </Container>
     </>
