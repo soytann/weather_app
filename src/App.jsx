@@ -1,5 +1,4 @@
 import { useEffect, useState, useCallback } from "react";
-import { supabase } from "../utils/createClient";
 import Main from "./components/Main";
 import Layout from "./components/layout/Layout";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -20,15 +19,9 @@ function App() {
   const theme = createTheme({
     palette: {
       mode: 'light',
-      primary: {
-        main: '#72c1bb',
-      },
-      secondary: {
-        main: '#f50057',
-      },
       text: {
         primary: '#ffffff',
-        secondary: 'rgba(131,234,231,0.6)',
+        secondary: 'rgba(202, 175, 144, 0.6)',
         disabled: 'rgba(65,103,239,0.38)',
       },
     },

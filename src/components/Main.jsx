@@ -39,10 +39,10 @@ const Main = ({ currentWeather, searchedLocationWeather, mode }) => {
 
   // データが存在するかどうかをチェック
   if (mode === 'current' && (!currentWeather || currentWeather.length === 0)) {
-    return <p>No current weather data available</p>;
+    return <p>Loading...</p>;
   }
   if (mode === 'search' && (!searchedLocationWeather || searchedLocationWeather.length === 0)) {
-    return <p>No weather data available</p>;
+    return <p>Loading...</p>;
   }
 
   const animatedIcon = iconMapping[weatherData.icon] ?? 'CLEAR_DAY';
