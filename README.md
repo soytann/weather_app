@@ -11,7 +11,9 @@
 - バックエンド: Supabase
 - データベース: Supabase (PostgreSQL)
 - ワークフローオートメーション: n8n
-[Uploading My_workflow.json…]
+[Uploading My_workflow.json…]()
+
+<img width="931" alt="SS 31" src="https://github.com/soytann/wheather_app/assets/148407454/c8cd04e6-d1ba-49de-8e71-238d58956881">
 
 
 ## 難しかったこと
