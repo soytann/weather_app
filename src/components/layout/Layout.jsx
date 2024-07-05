@@ -96,6 +96,10 @@ const Layout = ({ region, setRegion, fetchWeather, currentWeather, currentForeca
           </Box>
         </Box>
 
+        <Box sx={{ cursor: 'pointer' }} >
+              <h4 onClick={() =>window.location.reload()}>📍CURRENT</h4>
+            </Box >
+
         <Box p={2} color="white">
           <Box height="25vh" mb={24} textAlign='center'>
             <Main 
