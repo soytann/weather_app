@@ -1,4 +1,4 @@
-import { Box, Container, CssBaseline } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import Search from "../Search";
 import Main from "../Main";
 import { useState, useEffect } from "react";
@@ -6,26 +6,19 @@ import { iconMapping, iconDefaults } from '../../constants';
 import ReactAnimatedWeather from 'react-animated-weather';
 import { DateTime } from 'luxon';
 import { supabase } from "../../../utils/createClient";
+import {  grey,pink} from "@mui/material/colors";
 
 const Layout = ({ region, setRegion, fetchWeather, currentWeather, currentForecast, searchedLocationWeather, searchedLocationForecast, mode,setMode, setSearchedLocationWeather, setSearchedLocationForecast}) => {
 
-  const [bgImage, setBgImage] = useState("black");
+  const [bgImage, setBgImage] = useState(grey[400]);
   const [selectedCity, setSelectedCity] = useState("");
   const [locationID, setLocationID] = useState("");
 
+
   useEffect(() => {
     if (currentWeather && currentWeather.length) {
-      switch (currentWeather[0].main) {
-        case "Rain":
-          setBgImage("#ff0000");
-          break;
-        case "Clouds":
-          setBgImage("#0000ff");
-          break;
-        default:
-          setBgImage("#0000ff");
+      setBgImage(pink[400]);
       }
-    }
   }, [currentWeather]);
 
   const handleCityClick = (city, cityID) => {
@@ -100,7 +93,7 @@ const Layout = ({ region, setRegion, fetchWeather, currentWeather, currentForeca
               <h4 onClick={() =>window.location.reload()}>📍CURRENT</h4>
             </Box >
 
-        <Box p={2} color="white">
+        <Box p={2}>
           <Box height="25vh" mb={24} textAlign='center'>
             <Main 
               currentWeather={currentWeather} 
@@ -117,13 +110,13 @@ const Layout = ({ region, setRegion, fetchWeather, currentWeather, currentForeca
                 previousDay = currentDay;
 
                 return (
-                  <Box key={forecast.id} display="flex" sx={{ height: 200, width: 80, padding: 1, backgroundColor: "rgba(255,255,255,0.2)", color: 'white', alignItems: 'center', justifyContent: 'space-evenly', textAlign: 'center', flexDirection: 'column' }}>
+                  <Box key={forecast.id} display="flex" sx={{ height: 200, width: 80, padding: 1, backgroundColor: "rgba(255,255,255,0.2)", alignItems: 'center', justifyContent: 'space-evenly', textAlign: 'center', flexDirection: 'column' }}>
                     {shouldDisplayDay ? (
-                      <Box key={forecast.id} display="flex" sx={{ height: 20, width: 80, padding: 2, color: 'white', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', textAlign: 'center' }}>
+                      <Box key={forecast.id} display="flex" sx={{ height: 20, width: 80, padding: 2, alignItems: 'center', justifyContent: 'center', flexDirection: 'column', textAlign: 'center' }}>
                         {currentDay}日
                       </Box>
                     ) :
-                    <Box key={forecast.id} display="flex" sx={{ height: 20, width: 80, padding: 2, color: 'white', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', textAlign: 'center' }}>
+                    <Box key={forecast.id} display="flex" sx={{ height: 20, width: 80, padding: 2, alignItems: 'center', justifyContent: 'center', flexDirection: 'column', textAlign: 'center' }}>
 
                   </Box>
 }

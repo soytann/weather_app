@@ -1,0 +1,1518 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openweathermap.org/data/2.5/weather",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $json.body.region }}"
+            },
+            {
+              "name": "appid",
+              "value": "9d6c4121439a23a5c163578dd6c36fda"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "id": "c224e5e4-fa79-4094-8b54-843028566031",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        620,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "tableId": "searched_location_weather",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "region",
+              "fieldValue": "={{ $json.name }}"
+            },
+            {
+              "fieldId": "temperature",
+              "fieldValue": "={{ $json.main.temp }}"
+            },
+            {
+              "fieldId": "wind_speed",
+              "fieldValue": "={{ $json.wind.speed }}"
+            },
+            {
+              "fieldId": "min_temperature",
+              "fieldValue": "={{ $json.main.temp_min }}"
+            },
+            {
+              "fieldId": "max_temperature",
+              "fieldValue": "={{ $json.main.temp_max }}"
+            },
+            {
+              "fieldId": "humidity",
+              "fieldValue": "={{ $json.main.humidity }}"
+            },
+            {
+              "fieldId": "weather_description",
+              "fieldValue": "={{ $json.weather[0].description }}"
+            },
+            {
+              "fieldId": "main",
+              "fieldValue": "={{ $json.weather[0].main }}"
+            },
+            {
+              "fieldId": "icon",
+              "fieldValue": "={{ $json.weather[0].icon }}"
+            },
+            {
+              "fieldId": "sunset",
+              "fieldValue": "={{ $json.sys.sunset }}"
+            },
+            {
+              "fieldId": "sunrize",
+              "fieldValue": "={{ $json.sys.sunrise }}"
+            },
+            {
+              "fieldId": "country",
+              "fieldValue": "={{$json.sys.country}}"
+            }
+          ]
+        }
+      },
+      "id": "1c1aa548-20bc-4df5-9591-ef16d8bb7726",
+      "name": "Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        620
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "cBGI4M5c3KjsdJsT",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openweathermap.org/data/2.5/weather",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $json.body.currentRegion }}"
+            },
+            {
+              "name": "appid",
+              "value": "9d6c4121439a23a5c163578dd6c36fda"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "id": "e19ce5ae-9094-4d6f-84e8-db9739bce62d",
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        620,
+        -180
+      ]
+    },
+    {
+      "parameters": {
+        "cityName": "={{ $json.name }}"
+      },
+      "id": "bb0cdbc8-ae8e-47f5-8547-b32341aee348",
+      "name": "OpenWeatherMap1",
+      "type": "n8n-nodes-base.openWeatherMap",
+      "typeVersion": 1,
+      "position": [
+        800,
+        -160
+      ],
+      "credentials": {
+        "openWeatherMapApi": {
+          "id": "pEwQXIplFZknCbnP",
+          "name": "OpenWeatherMap account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "current_weather",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "region",
+              "fieldValue": "={{ $json.name }}"
+            },
+            {
+              "fieldId": "temperature",
+              "fieldValue": "={{ $json.main.temp }}"
+            },
+            {
+              "fieldId": "wind_speed",
+              "fieldValue": "={{ $json.wind.speed }}"
+            },
+            {
+              "fieldId": "min_temperature",
+              "fieldValue": "={{ $json.main.temp_min }}"
+            },
+            {
+              "fieldId": "max_temperature",
+              "fieldValue": "={{ $json.main.temp_max }}"
+            },
+            {
+              "fieldId": "humidity",
+              "fieldValue": "={{ $json.main.humidity }}"
+            },
+            {
+              "fieldId": "weather_description",
+              "fieldValue": "={{ $json.weather[0].description }}"
+            },
+            {
+              "fieldId": "main",
+              "fieldValue": "={{ $json.weather[0].main }}"
+            },
+            {
+              "fieldId": "icon",
+              "fieldValue": "={{ $json.weather[0].icon }}"
+            },
+            {
+              "fieldId": "sunset",
+              "fieldValue": "={{ $json.sys.sunset }}"
+            },
+            {
+              "fieldId": "sunrise",
+              "fieldValue": "={{ $json.sys.sunrise }}"
+            },
+            {
+              "fieldId": "country",
+              "fieldValue": "={{ $json.sys.country }}"
+            }
+          ]
+        }
+      },
+      "id": "a5ffe5e1-430a-468b-9e00-adc320b4af33",
+      "name": "Supabase1",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        960,
+        -120
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "cBGI4M5c3KjsdJsT",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "5DayForecast",
+        "cityName": "={{ $json.name }}"
+      },
+      "id": "6d4e8e30-0aa4-4c37-aba1-2a6c614395f5",
+      "name": "OpenWeatherMap2",
+      "type": "n8n-nodes-base.openWeatherMap",
+      "typeVersion": 1,
+      "position": [
+        860,
+        160
+      ],
+      "credentials": {
+        "openWeatherMapApi": {
+          "id": "pEwQXIplFZknCbnP",
+          "name": "OpenWeatherMap account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "5DayForecast",
+        "cityName": "={{ $json.name }}"
+      },
+      "id": "f6204abd-9355-4d0e-85ca-e60610c754ce",
+      "name": "OpenWeatherMap3",
+      "type": "n8n-nodes-base.openWeatherMap",
+      "typeVersion": 1,
+      "position": [
+        860,
+        1020
+      ],
+      "credentials": {
+        "openWeatherMapApi": {
+          "id": "pEwQXIplFZknCbnP",
+          "name": "OpenWeatherMap account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "location",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "id",
+              "fieldValue": "={{ $json.city.id }}"
+            },
+            {
+              "fieldId": "citys",
+              "fieldValue": "={{ $json.city.name }}"
+            },
+            {
+              "fieldId": "countries",
+              "fieldValue": "={{ $json.city.country }}"
+            }
+          ]
+        }
+      },
+      "id": "d631ed27-f9cb-4448-b4e9-7ae52dc2b5fb",
+      "name": "Supabase3",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2580,
+        640
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "cBGI4M5c3KjsdJsT",
+          "name": "Supabase account"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "notes": "continue on fail in case id already exists"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "location",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        }
+      },
+      "id": "582638cc-7159-4538-8618-f8f629ba423f",
+      "name": "Supabase5",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        480
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "cBGI4M5c3KjsdJsT",
+          "name": "Supabase account"
+        }
+      },
+      "notes": "Locationテーブル"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "2384757c-a8db-42fa-8a60-a1571ec6567d",
+              "leftValue": "={{ Object.keys($json).length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "1c8ca4c5-2b85-4b43-9650-a9a06686d151",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2400,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0e828e6a-31cd-4afe-bc49-4bf4bd2d7126",
+              "name": "id",
+              "value": "={{ $json.city.id }}",
+              "type": "number"
+            },
+            {
+              "id": "f8a327be-a0b5-48c8-99ed-1e36066e6cd6",
+              "name": "name",
+              "value": "={{ $json.city.name }}",
+              "type": "string"
+            },
+            {
+              "id": "5f4a0b01-2efc-45d5-814e-530238a4bf80",
+              "name": "country",
+              "value": "={{ $json.city.country }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2a65aa18-1b15-403f-a6a8-523c8d83a202",
+      "name": "Map City",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1780,
+        740
+      ],
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "cityName": "={{ $json.name }}"
+      },
+      "id": "25e373b1-23e2-4487-a277-d7de741a0121",
+      "name": "OpenWeatherMap",
+      "type": "n8n-nodes-base.openWeatherMap",
+      "typeVersion": 1,
+      "position": [
+        840,
+        580
+      ],
+      "credentials": {
+        "openWeatherMapApi": {
+          "id": "pEwQXIplFZknCbnP",
+          "name": "OpenWeatherMap account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openweathermap.org/data/2.5/weather",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $json.body.currentRegion }}"
+            },
+            {
+              "name": "appid",
+              "value": "9d6c4121439a23a5c163578dd6c36fda"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "id": "eecbf4e3-c5e0-4631-a170-0891a49d80d5",
+      "name": "HTTP Request2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        680,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "tableId": "forecast",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "forecast_time",
+              "fieldValue": "={{ new Date($json.list.dt * 1000).toISOString()}}"
+            },
+            {
+              "fieldId": "min_temp",
+              "fieldValue": "={{ $json.list.main.temp_min }}"
+            },
+            {
+              "fieldId": "max_temp",
+              "fieldValue": "={{ $json.list.main.temp_max }}"
+            },
+            {
+              "fieldId": "icon",
+              "fieldValue": "={{ $json.list.weather[0].icon }}"
+            },
+            {
+              "fieldId": "main",
+              "fieldValue": "={{ $json.list.weather[0].main }}"
+            },
+            {
+              "fieldId": "location_id",
+              "fieldValue": "={{ $json.city.id }}"
+            }
+          ]
+        }
+      },
+      "id": "b716c48b-a818-4ddd-b93e-40f6ae5fbdbc",
+      "name": "Supabase4",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        1220
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "cBGI4M5c3KjsdJsT",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "id": "2e76b053-dca0-44ef-9f3c-26eae8403b7a",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1740,
+        1220
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "id": "83c6362f-0650-4516-b4c7-50e372157ad3",
+      "name": "Respond to Webhook1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1280,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "id": "54b7dd4e-4d20-40d1-adbe-4853ee582636",
+      "name": "Respond to Webhook2",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1420,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "id": "f43f4f14-633c-454e-8b6f-67d16d4ab563",
+      "name": "Respond to Webhook3",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "fetchweather",
+        "authentication": "basicAuth",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "6ced934a-fd7b-4808-a9ae-2f2d27c64eea",
+      "name": "Searched",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        440,
+        580
+      ],
+      "webhookId": "bfdeff35-3b72-4e59-b84a-a3c5d49267c6",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "XiYCiB1na0VQ8cPe",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "fetch-currentlocation-weather",
+        "authentication": "basicAuth",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "a0db4493-9e23-4b8c-8d7d-8876c555b88a",
+      "name": "currentweather",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        320,
+        -320
+      ],
+      "webhookId": "bfdeff35-3b72-4e59-b84a-a3c5d49267c6",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "XiYCiB1na0VQ8cPe",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "forecast",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "location_id",
+              "fieldValue": "={{ $json.city.id }}"
+            },
+            {
+              "fieldId": "forecast_time",
+              "fieldValue": "={{new Date($json.list.dt * 1000).toISOString()}}"
+            },
+            {
+              "fieldId": "min_temp",
+              "fieldValue": "={{ $json.list.main.temp }}"
+            },
+            {
+              "fieldId": "icon",
+              "fieldValue": "={{ $json.list.weather[0].icon }}"
+            },
+            {
+              "fieldId": "main",
+              "fieldValue": "={{ $json.list.weather[0].main }}"
+            }
+          ]
+        }
+      },
+      "id": "17038c37-30d8-4c7f-9cf2-8a6713cceb21",
+      "name": "Supabase2",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        140
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "cBGI4M5c3KjsdJsT",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openweathermap.org/data/2.5/weather",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $json.body.region }}"
+            },
+            {
+              "name": "appid",
+              "value": "9d6c4121439a23a5c163578dd6c36fda"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "id": "f9d071b0-7503-4138-909f-1677ff3f6f4b",
+      "name": "HTTP Request3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        1040
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "list",
+        "include": "selectedOtherFields",
+        "fieldsToInclude": "city",
+        "options": {}
+      },
+      "id": "b2f73ccb-a8bb-4fd6-bf38-75aac9b1bedc",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        1220
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "list",
+        "include": "selectedOtherFields",
+        "fieldsToInclude": "city",
+        "options": {}
+      },
+      "id": "710bb4f2-5cde-4591-9038-eafd87fbab6c",
+      "name": "Split Out1",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openweathermap.org/data/2.5/weather",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "=tokyo"
+            },
+            {
+              "name": "appid",
+              "value": "9d6c4121439a23a5c163578dd6c36fda"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "id": "054ff9eb-7305-46e7-8327-d019a619e2e8",
+      "name": "HTTP Request4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        1420
+      ]
+    },
+    {
+      "parameters": {
+        "cityName": "={{ $json.name }}"
+      },
+      "id": "bd7a2587-1514-4ca5-bbcf-d43f570317ce",
+      "name": "OpenWeatherMap4",
+      "type": "n8n-nodes-base.openWeatherMap",
+      "typeVersion": 1,
+      "position": [
+        700,
+        1580
+      ],
+      "credentials": {
+        "openWeatherMapApi": {
+          "id": "pEwQXIplFZknCbnP",
+          "name": "OpenWeatherMap account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "preset_location",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "region",
+              "condition": "eq"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "region",
+              "fieldValue": "={{ $json.name }}"
+            },
+            {
+              "fieldId": "temperature",
+              "fieldValue": "={{ $json.main.temp }}"
+            },
+            {
+              "fieldId": "wind_speed",
+              "fieldValue": "={{ $json.wind.speed }}"
+            },
+            {
+              "fieldId": "min_temperature",
+              "fieldValue": "={{ $json.main.temp_min }}"
+            },
+            {
+              "fieldId": "max_temperature",
+              "fieldValue": "={{ $json.main.temp_max }}"
+            },
+            {
+              "fieldId": "humidity",
+              "fieldValue": "={{ $json.main.humidity }}"
+            },
+            {
+              "fieldId": "weather_description",
+              "fieldValue": "={{ $json.weather[0].description }}"
+            },
+            {
+              "fieldId": "main",
+              "fieldValue": "={{ $json.weather[0].main }}"
+            },
+            {
+              "fieldId": "icon",
+              "fieldValue": "={{ $json.weather[0].icon }}"
+            },
+            {
+              "fieldId": "sunset",
+              "fieldValue": "={{ $json.sys.sunset }}"
+            },
+            {
+              "fieldId": "sunrise",
+              "fieldValue": "={{ $json.sys.sunrise }}"
+            },
+            {
+              "fieldId": "country",
+              "fieldValue": "={{ $json.sys.country }}"
+            }
+          ]
+        }
+      },
+      "id": "22ef7a44-d6dc-48b6-a9ed-ffe6b888d03b",
+      "name": "Supabase6",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        940,
+        1580
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "cBGI4M5c3KjsdJsT",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openweathermap.org/data/2.5/weather",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "=new york"
+            },
+            {
+              "name": "appid",
+              "value": "9d6c4121439a23a5c163578dd6c36fda"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "id": "5fc9a16b-590c-4a87-a635-d4bcd0fdd17e",
+      "name": "HTTP Request5",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        1560
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openweathermap.org/data/2.5/weather",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "=london"
+            },
+            {
+              "name": "appid",
+              "value": "9d6c4121439a23a5c163578dd6c36fda"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "id": "957f8c76-8181-45f9-b841-5794920a0fc9",
+      "name": "HTTP Request6",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        1720
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openweathermap.org/data/2.5/weather",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "=paris"
+            },
+            {
+              "name": "appid",
+              "value": "9d6c4121439a23a5c163578dd6c36fda"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "id": "3e4597f5-d375-4579-a8b6-2349330c97f6",
+      "name": "HTTP Request7",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        1900
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "id": "ffc2abc5-34b5-4c78-8b5f-8a7660ee1e5d",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -20,
+        1660
+      ]
+    },
+    {
+      "parameters": {
+        "path": "0e8284c1-7cbe-4b80-bbd7-267189b4587d",
+        "formTitle": "region",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "currentRegion"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "57cc6fda-dc14-46c7-bb8a-4e700e007770",
+      "name": "n8n Form Trigger",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        1300
+      ],
+      "webhookId": "0e8284c1-7cbe-4b80-bbd7-267189b4587d"
+    },
+    {
+      "parameters": {
+        "operation": "5DayForecast",
+        "cityName": "={{ $json.name }}"
+      },
+      "id": "d8a01356-6e9e-4d20-8ce3-dce0a42f1c76",
+      "name": "OpenWeatherMap5",
+      "type": "n8n-nodes-base.openWeatherMap",
+      "typeVersion": 1,
+      "position": [
+        860,
+        2020
+      ],
+      "credentials": {
+        "openWeatherMapApi": {
+          "id": "pEwQXIplFZknCbnP",
+          "name": "OpenWeatherMap account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "preset_location_forecast",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "location_id",
+              "condition": "eq"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "forecast_time",
+              "fieldValue": "={{ new Date($json.list.dt * 1000).toISOString()}}"
+            },
+            {
+              "fieldId": "min_temp",
+              "fieldValue": "={{ $json.list.main.temp_min }}"
+            },
+            {
+              "fieldId": "max_temp",
+              "fieldValue": "={{ $json.list.main.temp_max }}"
+            },
+            {
+              "fieldId": "icon",
+              "fieldValue": "={{ $json.list.weather[0].icon }}"
+            },
+            {
+              "fieldId": "main",
+              "fieldValue": "={{ $json.list.weather[0].main }}"
+            },
+            {
+              "fieldId": "location_id",
+              "fieldValue": "={{ $json.city.id }}"
+            }
+          ]
+        }
+      },
+      "id": "ec2a60cf-ba92-4c06-bc3a-7af32a29f87f",
+      "name": "Supabase8",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        2020
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "cBGI4M5c3KjsdJsT",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "list",
+        "include": "selectedOtherFields",
+        "fieldsToInclude": "city",
+        "options": {}
+      },
+      "id": "e734b88c-ff71-40b8-b1b8-2afcae55f09b",
+      "name": "Split Out2",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        2000
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "fetchweatherfivedays",
+        "authentication": "basicAuth",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "b2d8b315-4aa4-42c8-b197-273fe5a40dd4",
+      "name": "Searched 5days",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        160,
+        1060
+      ],
+      "webhookId": "bfdeff35-3b72-4e59-b84a-a3c5d49267c6",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "XiYCiB1na0VQ8cPe",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "fetch-currentlocation-weather-fivedays",
+        "authentication": "basicAuth",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "78c4f8de-7591-4a83-a94a-dd347228bc31",
+      "name": "Current location 5days",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        440,
+        140
+      ],
+      "webhookId": "bfdeff35-3b72-4e59-b84a-a3c5d49267c6",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "XiYCiB1na0VQ8cPe",
+          "name": "Unnamed credential"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenWeatherMap1": {
+      "main": [
+        [
+          {
+            "node": "Supabase1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Supabase5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenWeatherMap2": {
+      "main": [
+        [
+          {
+            "node": "Map City",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenWeatherMap3": {
+      "main": [
+        [
+          {
+            "node": "Map City",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase5": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Supabase3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map City": {
+      "main": [
+        [
+          {
+            "node": "Supabase5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenWeatherMap": {
+      "main": [
+        [
+          {
+            "node": "Supabase",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Supabase5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase4": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Searched": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "currentweather": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Supabase4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Supabase2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "OpenWeatherMap5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenWeatherMap4": {
+      "main": [
+        [
+          {
+            "node": "Supabase6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request5": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "OpenWeatherMap5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request6": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "OpenWeatherMap5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request7": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "OpenWeatherMap5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request6",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenWeatherMap5": {
+      "main": [
+        [
+          {
+            "node": "Split Out2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out2": {
+      "main": [
+        [
+          {
+            "node": "Supabase8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Searched 5days": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Current location 5days": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "767248b9-c850-496e-837b-56eeef6777f8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6176bb6cba123e5b40d5519957daaba5e518ce7b5182f252416144450d5b2066"
+  },
+  "id": "V1ACAPhrqQVqlclV",
+  "tags": []
+}
